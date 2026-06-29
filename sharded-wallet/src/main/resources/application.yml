@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: sharded-wallet
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: false
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: wallet-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  datasource:
+    shard0:
+      jdbc-url: ${DB_URL:jdbc:postgresql://localhost:5432/walletdb}
+      username: ${DB_USERNAME:walletuser}
+      password: ${DB_PASSWORD:wallet123}
+      driver-class-name: org.postgresql.Driver
+    shard1:
+      jdbc-url: ${DB_URL:jdbc:postgresql://localhost:5432/walletdb}
+      username: ${DB_USERNAME:walletuser}
+      password: ${DB_PASSWORD:wallet123}
+      driver-class-name: org.postgresql.Driver
+    shard2:
+      jdbc-url: ${DB_URL:jdbc:postgresql://localhost:5432/walletdb}
+      username: ${DB_USERNAME:walletuser}
+      password: ${DB_PASSWORD:wallet123}
+      driver-class-name: org.postgresql.Driver
+
+jwt:
+  secret: ${JWT_SECRET:3f8b2c1d9e4a7f6b0c5d2e8a1f4b7c9d3e6a0f2b5c8d1e4a7f0b3c6d9e2a5f8b}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+server:
+  port: ${PORT:8080}
+
+logging:
+  level:
+    com.example: DEBUG
